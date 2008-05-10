@@ -11,7 +11,7 @@ def match(regexp, text)
     return matchhere(regexp[1..-1], text)
   end
 
-  (0..text.size).each do |i|
+  0.upto(text.size) do |i|
     if matchhere(regexp, text[i..-1])
       return true
     end
@@ -22,19 +22,17 @@ end
 
 def matchhere(regexp, text)
   log %Q{"#{text}" =~ /#{regexp}/}
+
   if regexp.size == 0
     return true
-  end
 
-  if regexp[0].chr == '$' && regexp.size == 1
+  elsif regexp[0].chr == '$' && regexp.size == 1
     return text.size == 0
-  end
 
-  if regexp[1] && regexp[1].chr == '*'
+  elsif regexp[1] && regexp[1].chr == '*'
     return matchstar(regexp[0].chr, regexp[2..-1], text)
-  end
 
-  if text.size > 0 && (regexp[0].chr == '.' || regexp[0].chr == text[0].chr)
+  elsif text.size > 0 && (regexp[0].chr == '.' || regexp[0].chr == text[0].chr)
     return matchhere(regexp[1..-1], text[1..-1])
   end
 
