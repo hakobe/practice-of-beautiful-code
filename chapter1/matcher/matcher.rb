@@ -32,6 +32,9 @@ def matchhere(regexp, text)
   elsif regexp[1] && regexp[1].chr == '*'
     return matchstar(regexp[0].chr, regexp[2..-1], text)
 
+  elsif regexp[1] && regexp[1].chr == '+'
+    return matchplus(regexp[0].chr, regexp[2..-1], text)
+
   elsif text.size > 0 && (regexp[0].chr == '.' || regexp[0].chr == text[0].chr)
     return matchhere(regexp[1..-1], text[1..-1])
   end
@@ -51,6 +54,26 @@ def matchstar(c, regexp, text)
   end
 
   start.downto(0) do |n|
+    if matchhere(regexp, text[n..-1])
+      return true
+    end
+  end
+
+  return false
+end
+
+def matchplus(c, regexp, text)
+  start = 0
+  if c == '.'
+    start = text.size
+  else
+    text.each_byte do |tc|
+      break if tc.chr != c
+      start += 1
+    end
+  end
+
+  start.downto(1) do |n|
     if matchhere(regexp, text[n..-1])
       return true
     end

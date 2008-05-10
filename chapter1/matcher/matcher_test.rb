@@ -53,6 +53,19 @@ class MatcherTest < Test::Unit::TestCase
     # not match
     # ??
   end
+
+  def test_match_plus # +
+    # match
+    assert(match('a+x', 'aaaax')) 
+    assert(match('a+x', 'aaaabaaaax')) 
+    assert(match('.+x', 'aaaax')) 
+    assert(match('.+x', 'aaaaxaaaab')) 
+
+    # not match
+    assert(!match('a+x', 'x')) 
+    assert(!match('a+',  '')) 
+    assert(!match('a+',  'xyz')) 
+  end
   
   def test_match_empty_pattern
     assert(match('', 'abcdefghijklm'))
