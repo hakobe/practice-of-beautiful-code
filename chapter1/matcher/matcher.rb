@@ -1,3 +1,11 @@
+DEBUG=false
+
+def log(*args)
+  if DEBUG
+    STDERR.puts *args
+  end
+end
+
 def match(regexp, text)
   if regexp[0] && regexp[0].chr == '^'
     return matchhere(regexp[1..-1], text)
@@ -13,6 +21,7 @@ def match(regexp, text)
 end
 
 def matchhere(regexp, text)
+  log %Q{"#{text}" =~ /#{regexp}/}
   if regexp.size == 0
     return true
   end
@@ -33,11 +42,21 @@ def matchhere(regexp, text)
 end
 
 def matchstar(c, regexp, text)
-  (0..text.size).each do |i|
-    if matchhere(regexp, text[i..-1])
+  start = 0
+  if c == '.'
+    start = text.size
+  else
+    text.each_byte do |tc|
+      break if tc.chr != c
+      start += 1
+    end
+  end
+
+  start.downto(0) do |n|
+    if matchhere(regexp, text[n..-1])
       return true
     end
-    break if text[0].chr != c && text[0].chr != '.'
   end
+
   return false
 end

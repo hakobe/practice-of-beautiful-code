@@ -15,9 +15,9 @@ class MatcherTest < Test::Unit::TestCase
 
   def test_match_any # .
     # match
-    assert(match('.', 'a'))
+    assert(match('.',   'a'))
     assert(match('..', 'ab'))
-    assert(match('.', 'abc'))
+    assert(match('.',  'abc'))
 
     # not match
     assert(!match('..', 'a'))
@@ -43,10 +43,12 @@ class MatcherTest < Test::Unit::TestCase
   def test_match_star # *
     # match
     assert(match('a*x', 'aaaax')) 
+    assert(match('a*x', 'aaaabaaaax')) 
     assert(match('a*x', 'x')) 
-    assert(match('a*', '')) 
-    assert(match('a*', 'xyz')) 
+    assert(match('a*',  '')) 
+    assert(match('a*',  'xyz')) 
     assert(match('.*x', 'aaaax')) 
+    assert(match('.*x', 'aaaaxaaaab')) 
 
     # not match
     # ??
